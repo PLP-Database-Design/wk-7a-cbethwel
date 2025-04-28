@@ -1,4 +1,4 @@
--- Question 1: Achieving 1NF (First Normal Form)
+-- Question 1: Achieving 1NF
 
 -- Step 1: Creating the normalized table structure
 CREATE TABLE ProductDetail_1NF (
