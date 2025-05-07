@@ -1,15 +1,15 @@
 -- Question 1: Achieving 1NF
 
--- Step 1: Creating the normalized table structure
-CREATE TABLE ProductDetail_1NF (
+-- Creating normalized ProductDetail table
+CREATE TABLE ProductDetail (
     OrderID INT,
-    CustomerName VARCHAR(255),
-    Product VARCHAR(255)
+    CustomerName VARCHAR(100),
+    Products VARCHAR(100)
 );
 
--- Step 2: Inserting the normalized data
-INSERT INTO ProductDetail_1NF (OrderID, CustomerName, Product)
-VALUES 
+-- Inserting normalized data
+INSERT INTO ProductDetail(OrderID, CustomerName, Products)
+VALUES
 (101, 'John Doe', 'Laptop'),
 (101, 'John Doe', 'Mouse'),
 (102, 'Jane Smith', 'Tablet'),
@@ -17,53 +17,36 @@ VALUES
 (102, 'Jane Smith', 'Mouse'),
 (103, 'Emily Clark', 'Phone');
 
+-- Question 2: Achieving 2NF
 
---  Question 2: Achieving 2NF
-
--- Step 1: Creating a separate Customer table
-CREATE TABLE Customer (
-    CustomerID INT PRIMARY KEY AUTO_INCREMENT,
-    CustomerName VARCHAR(255)
-);
-
--- Step 2: Creating an Order table that references the Customer
-CREATE TABLE `Order` (
+-- Step 1: Creating Orders table
+CREATE TABLE Orders (
     OrderID INT PRIMARY KEY,
-    CustomerID INT,
-    FOREIGN KEY (CustomerID) REFERENCES Customer(CustomerID)
+    CustomerName VARCHAR(100)
 );
 
--- Step 3: Creating an OrderDetails table with Product and Quantity
-CREATE TABLE OrderDetails (
-    OrderDetailID INT PRIMARY KEY AUTO_INCREMENT,
-    OrderID INT,
-    Product VARCHAR(255),
-    Quantity INT,
-    FOREIGN KEY (OrderID) REFERENCES `Order`(OrderID)
+-- Inserting order and customer mapping
+INSERT INTO Orders (OrderID, CustomerName)
+VALUES
+(101, 'John Doe'),
+(102, 'Jane Smith'),
+(103, 'Emily Clark');
+
+-- Step 2: Creating Product table with foreign key to Orders
+CREATE TABLE Product (
+    product_id INT PRIMARY KEY,
+    productName VARCHAR(100),
+    quantity INT,
+    order_id INT,
+    FOREIGN KEY (order_id) REFERENCES Orders(OrderID)
 );
 
--- Step 4: Inserting the normalized data
-
--- Inserting Customers
-INSERT INTO Customer (CustomerName)
+-- Inserting product and quantity data linked to order
+INSERT INTO Product(product_id, productName, quantity, order_id)
 VALUES 
-('John Doe'),
-('Jane Smith'),
-('Emily Clark');
-
--- Inserting Orders
-INSERT INTO `Order` (OrderID, CustomerID)
-VALUES 
-(101, 1), -- John Doe
-(102, 2), -- Jane Smith
-(103, 3); -- Emily Clark
-
--- Inserting Order Details
-INSERT INTO OrderDetails (OrderID, Product, Quantity)
-VALUES 
-(101, 'Laptop', 2),
-(101, 'Mouse', 1),
-(102, 'Tablet', 3),
-(102, 'Keyboard', 1),
-(102, 'Mouse', 2),
-(103, 'Phone', 1);
+(1, 'Laptop', 2, 101),
+(2, 'Mouse', 1, 101),
+(3, 'Tablet', 3, 102),
+(4, 'Keyboard', 2, 102),
+(5, 'Mouse', 1, 102),
+(6, 'Phone', 1, 103);
